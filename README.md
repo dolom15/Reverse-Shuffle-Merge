@@ -1,1 +1,1 @@
-# Reverse-Shuffle-Merge
+# Reverse-Shuffle-Merge This C# program reconstructs the **lexicographically smallest string** that could have been used to form the given string `s` through reversing, shuffling, and merging operations. It works **backward through the string**, using frequency tracking and a stack to greedily build the smallest valid result while ensuring all required characters are included.
