@@ -1,0 +1,89 @@
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Collections;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
+using System.Text;
+using System;
+
+class Result
+{
+
+    /*
+     * Complete the 'reverseShuffleMerge' function below.
+     *
+     * The function is expected to return a STRING.
+     * The function accepts STRING s as parameter.
+     */
+
+    public static string reverseShuffleMerge(string s)
+    {
+        Dictionary<char, int> freq = new Dictionary<char, int>();
+        foreach (char c in s)
+        {
+            if (!freq.ContainsKey(c)) freq[c] = 0;
+            freq[c]++;
+        }
+
+        Dictionary<char, int> needed = new Dictionary<char, int>();
+        foreach (var kv in freq)
+            needed[kv.Key] = kv.Value / 2;
+
+        Dictionary<char, int> remaining = new Dictionary<char, int>(freq);
+
+        Stack<char> resultStack = new Stack<char>();
+        
+        foreach (char c in s.Reverse())
+        {
+            remaining[c]--;
+
+            if (needed[c] == 0)
+                continue;
+
+            while (resultStack.Count > 0)
+            {
+                char last = resultStack.Peek();
+
+                if (last > c && remaining[last] > needed[last])
+                {
+                    resultStack.Pop();
+                    needed[last]++;
+                    }
+                else
+                {
+                    break;
+                }
+            }
+
+            resultStack.Push(c);
+            needed[c]--;
+        }
+
+        char[] resultArray = resultStack.Reverse().ToArray();
+        return new string(resultArray);
+    }
+
+}
+
+class Solution
+{
+    public static void Main(string[] args)
+    {
+        TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
+
+        string s = Console.ReadLine();
+
+        string result = Result.reverseShuffleMerge(s);
+
+        textWriter.WriteLine(result);
+
+        textWriter.Flush();
+        textWriter.Close();
+    }
+}
